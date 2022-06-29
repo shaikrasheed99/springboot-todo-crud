@@ -1,0 +1,3 @@
+fileignoreconfig:
+- filename: src/main/resources/db/migration/V1.1__CreateTableTodo.sql
+  checksum: 888d549142120e9b90047c438b0b6f9d963af19455fd5363105f2840ea024fd9
