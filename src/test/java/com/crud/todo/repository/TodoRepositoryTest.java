@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class TodoRepositoryTest {
@@ -40,6 +41,16 @@ public class TodoRepositoryTest {
         Todo todo = todoRepository.findById(1).get();
 
         assertEquals(todo.getDescription(), "Sleeping");
+    }
+
+    @Test
+    void shouldBeAbleToUpdateTodoDetails() {
+        Todo addedTodo = todoRepository.save(todo);
+
+        addedTodo.setCompleted(true);
+        Todo updatedTodo = todoRepository.save(addedTodo);
+
+        assertTrue(updatedTodo.getCompleted());
     }
 
     @AfterEach
