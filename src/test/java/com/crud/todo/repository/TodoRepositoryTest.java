@@ -31,4 +31,13 @@ public class TodoRepositoryTest {
 
         assertEquals(addedTodo.getDescription(), todo.getDescription());
     }
+
+    @Test
+    void shouldBeAbleToGetTodoById() {
+        todoRepository.save(todo);
+
+        Todo todo = todoRepository.findById(1).get();
+
+        assertEquals(todo.getDescription(), "Sleeping");
+    }
 }
