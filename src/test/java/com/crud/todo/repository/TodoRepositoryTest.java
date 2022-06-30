@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class TodoRepositoryTest {
@@ -51,6 +50,15 @@ public class TodoRepositoryTest {
         Todo updatedTodo = todoRepository.save(addedTodo);
 
         assertTrue(updatedTodo.getCompleted());
+    }
+
+    @Test
+    void shouldBeAbleToDeleteTodoById() {
+        Todo savedTodo = todoRepository.save(todo);
+
+        todoRepository.deleteById(savedTodo.getId());
+
+        assertFalse(todoRepository.findById(savedTodo.getId()).isPresent());
     }
 
     @AfterEach
