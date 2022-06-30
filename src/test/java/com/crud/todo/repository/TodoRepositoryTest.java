@@ -1,5 +1,6 @@
 package com.crud.todo.repository;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,10 @@ public class TodoRepositoryTest {
         Todo todo = todoRepository.findById(1).get();
 
         assertEquals(todo.getDescription(), "Sleeping");
+    }
+
+    @AfterEach
+    void erase() {
+        todoRepository.deleteAll();
     }
 }
