@@ -1,6 +1,7 @@
 package com.crud.todo.service;
 
 import com.crud.todo.exceptions.TodoAlreadyExistException;
+import com.crud.todo.exceptions.TodoNotFoundException;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,12 @@ public class TodoService {
     }
 
     public Todo getTodoById(int id) {
-        return todoRepository.findById(id).get();
+        Todo todo;
+        try {
+            todo = todoRepository.findById(id).get();
+        } catch (Exception exception) {
+            throw new TodoNotFoundException(exception.getMessage());
+        }
+        return todo;
     }
 }

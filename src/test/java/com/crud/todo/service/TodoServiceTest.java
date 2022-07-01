@@ -1,6 +1,7 @@
 package com.crud.todo.service;
 
 import com.crud.todo.exceptions.TodoAlreadyExistException;
+import com.crud.todo.exceptions.TodoNotFoundException;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.repository.TodoRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,5 +60,12 @@ public class TodoServiceTest {
         Todo todoById = todoService.getTodoById(todo.getId());
 
         assertEquals(todoById.getDescription(), todo.getDescription());
+    }
+
+    @Test
+    void shouldBeAbleToThrowExceptionWhenTodoIsNotFound() {
+        when(todoRepository.findById(todo.getId())).thenReturn(Optional.empty());
+
+        assertThrows(TodoNotFoundException.class, () -> todoService.getTodoById(todo.getId()));
     }
 }
