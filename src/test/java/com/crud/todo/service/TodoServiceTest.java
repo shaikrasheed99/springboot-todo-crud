@@ -2,6 +2,7 @@ package com.crud.todo.service;
 
 import com.crud.todo.repository.Todo;
 import com.crud.todo.repository.TodoRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,9 +20,19 @@ public class TodoServiceTest {
     @InjectMocks
     private TodoService todoService;
 
+    private Todo todo;
+
+    @BeforeEach
+    public void init() {
+        int id = 1;
+        String description = "Sleeping";
+        boolean completed = false;
+        String priority = "high";
+        todo = new Todo(id, description, completed, priority);
+    }
+
     @Test
     void shouldBeAbleToSaveTodoDetails() {
-        Todo todo = new Todo(1, "Sleeping", false, "high");
         when(todoRepository.save(todo)).thenReturn(todo);
 
         Todo createdTodo = todoService.create(todo);
