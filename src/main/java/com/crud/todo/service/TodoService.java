@@ -41,6 +41,8 @@ public class TodoService {
     }
 
     public boolean deleteTodoById(int todoId) {
+        Optional<Todo> todo = todoRepository.findById(todoId);
+        if (todo.isEmpty()) throw new TodoNotFoundException("Todo is not found!");
         todoRepository.deleteById(todoId);
         return true;
     }

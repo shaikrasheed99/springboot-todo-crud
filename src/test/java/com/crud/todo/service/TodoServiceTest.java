@@ -89,10 +89,18 @@ public class TodoServiceTest {
 
     @Test
     void shouldBeAbleToDeleteTodoByTodoId() {
+        when(todoRepository.findById(todo.getId())).thenReturn(Optional.ofNullable(todo));
         doNothing().when(todoRepository).deleteById(this.todo.getId());
 
         boolean isDeleted = todoService.deleteTodoById(todo.getId());
 
         assertTrue(isDeleted);
+    }
+
+    @Test
+    void shouldNotBeAbleToDeleteTodoWhenTodoIsNotFound() {
+        when(todoRepository.findById(todo.getId())).thenReturn(Optional.empty());
+
+        assertThrows(TodoNotFoundException.class, () -> todoService.deleteTodoById(todo.getId()));
     }
 }
