@@ -51,4 +51,13 @@ public class TodoServiceTest {
 
         assertThrows(TodoAlreadyExistException.class, () -> todoService.create(todo));
     }
+
+    @Test
+    void shouldBeAbleToGetTodoDetailsByTodoId() {
+        when(todoRepository.findById(todo.getId())).thenReturn(Optional.ofNullable(todo));
+
+        Todo todoById = todoService.getTodoById(todo.getId());
+
+        assertEquals(todoById.getDescription(), todo.getDescription());
+    }
 }

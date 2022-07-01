@@ -22,4 +22,8 @@ public class TodoService {
         if (existedTodo.isPresent()) throw new TodoAlreadyExistException("Todo has already existed with this Id!");
         return todoRepository.save(todo);
     }
+
+    public Todo getTodoById(int id) {
+        return todoRepository.findById(id).get();
+    }
 }
