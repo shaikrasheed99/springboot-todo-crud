@@ -1,13 +1,16 @@
 package com.crud.todo.service;
 
+import com.crud.todo.exceptions.TodoAlreadyExistException;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class TodoService {
-    private TodoRepository todoRepository;
+    private final TodoRepository todoRepository;
 
     @Autowired
     public TodoService(TodoRepository todoRepository) {
@@ -15,6 +18,8 @@ public class TodoService {
     }
 
     public Todo create(Todo todo) {
+        Optional<Todo> existedTodo = todoRepository.findById(todo.getId());
+        if (existedTodo.isPresent()) throw new TodoAlreadyExistException("Todo has already existed with this Id!");
         return todoRepository.save(todo);
     }
 }

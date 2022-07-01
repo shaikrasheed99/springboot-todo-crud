@@ -1,5 +1,6 @@
 package com.crud.todo.service;
 
+import com.crud.todo.exceptions.TodoAlreadyExistException;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.repository.TodoRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,10 +37,18 @@ public class TodoServiceTest {
 
     @Test
     void shouldBeAbleToSaveTodoDetails() {
+        when(todoRepository.findById(todo.getId())).thenReturn(Optional.empty());
         when(todoRepository.save(todo)).thenReturn(todo);
 
         Todo createdTodo = todoService.create(todo);
 
         assertEquals(createdTodo.getDescription(), todo.getDescription());
+    }
+
+    @Test
+    void shouldNotBeAbleToSaveTodoWithSameTodoId() {
+        when(todoRepository.findById(todo.getId())).thenReturn(Optional.ofNullable(todo));
+
+        assertThrows(TodoAlreadyExistException.class, () -> todoService.create(todo));
     }
 }
