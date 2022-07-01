@@ -24,26 +24,24 @@ public class TodoService {
         return todoRepository.save(todo);
     }
 
-    public Todo getTodoById(int id) {
-        Todo todo;
-        try {
-            todo = todoRepository.findById(id).get();
-        } catch (Exception exception) {
-            throw new TodoNotFoundException(exception.getMessage());
-        }
-        return todo;
+    public Todo getTodoById(int todoId) {
+        return isAvailable(todoId);
     }
 
     public Todo update(Todo todo, int todoId) {
-        Optional<Todo> todoById = todoRepository.findById(todoId);
-        if (todoById.isEmpty()) throw new TodoNotFoundException("Todo is not found!");
+        isAvailable(todoId);
         return todoRepository.save(todo);
     }
 
     public boolean deleteTodoById(int todoId) {
-        Optional<Todo> todo = todoRepository.findById(todoId);
-        if (todo.isEmpty()) throw new TodoNotFoundException("Todo is not found!");
+        isAvailable(todoId);
         todoRepository.deleteById(todoId);
         return true;
+    }
+
+    private Todo isAvailable(int todoId) {
+        Optional<Todo> todo = todoRepository.findById(todoId);
+        if (todo.isEmpty()) throw new TodoNotFoundException("Todo is not found!");
+        return todo.get();
     }
 }
