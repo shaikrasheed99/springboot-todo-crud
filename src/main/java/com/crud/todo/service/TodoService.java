@@ -35,6 +35,8 @@ public class TodoService {
     }
 
     public Todo update(Todo todo, int todoId) {
+        Optional<Todo> todoById = todoRepository.findById(todoId);
+        if (todoById.isEmpty()) throw new TodoNotFoundException("Todo is not found!");
         return todoRepository.save(todo);
     }
 }

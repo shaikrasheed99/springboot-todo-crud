@@ -72,10 +72,18 @@ public class TodoServiceTest {
     @Test
     void shouldBeAbleToUpdateTodoDetailsByTodoId() {
         Todo yetToUpdateTodo = new Todo(todo.getId(), todo.getDescription(), todo.getCompleted(), "low");
+        when(todoRepository.findById(todo.getId())).thenReturn(Optional.ofNullable(todo));
         when(todoRepository.save(todo)).thenReturn(yetToUpdateTodo);
 
         Todo updatedTodo = todoService.update(todo, todo.getId());
 
         assertEquals(updatedTodo.getPriority(), yetToUpdateTodo.getPriority());
+    }
+
+    @Test
+    void shouldNotBeAbleToUpdateTodoWhenTodoIdIsNotFound() {
+        when(todoRepository.findById(todo.getId())).thenReturn(Optional.empty());
+
+        assertThrows(TodoNotFoundException.class, () -> todoService.update(todo, todo.getId()));
     }
 }
