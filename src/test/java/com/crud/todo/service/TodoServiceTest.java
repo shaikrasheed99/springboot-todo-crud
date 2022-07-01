@@ -13,8 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -85,5 +85,14 @@ public class TodoServiceTest {
         when(todoRepository.findById(todo.getId())).thenReturn(Optional.empty());
 
         assertThrows(TodoNotFoundException.class, () -> todoService.update(todo, todo.getId()));
+    }
+
+    @Test
+    void shouldBeAbleToDeleteTodoByTodoId() {
+        doNothing().when(todoRepository).deleteById(this.todo.getId());
+
+        boolean isDeleted = todoService.deleteTodoById(todo.getId());
+
+        assertTrue(isDeleted);
     }
 }

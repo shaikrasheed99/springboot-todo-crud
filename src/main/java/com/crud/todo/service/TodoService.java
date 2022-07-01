@@ -39,4 +39,9 @@ public class TodoService {
         if (todoById.isEmpty()) throw new TodoNotFoundException("Todo is not found!");
         return todoRepository.save(todo);
     }
+
+    public boolean deleteTodoById(int todoId) {
+        todoRepository.deleteById(todoId);
+        return true;
+    }
 }
