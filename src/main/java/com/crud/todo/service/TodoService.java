@@ -33,4 +33,8 @@ public class TodoService {
         }
         return todo;
     }
+
+    public Todo update(Todo todo, int todoId) {
+        return todoRepository.save(todo);
+    }
 }
