@@ -1,5 +1,6 @@
 package com.crud.todo.controller;
 
+import com.crud.todo.exceptions.TodoAlreadyExistException;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.service.TodoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,6 +55,22 @@ public class TodoControllerTest {
 
         result.andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").value(todo.getId()))
+                .andDo(print());
+
+        verify(todoService, times(1)).create(any(Todo.class));
+    }
+
+    @Test
+    void shouldNotBeAbleToSaveTodoDetailsWithExistedTodoId() throws Exception {
+        when(todoService.create(any(Todo.class))).thenThrow(new TodoAlreadyExistException("Todo has already existed!"));
+
+        String todoJson = new ObjectMapper().writeValueAsString(todo);
+        ResultActions result = mockMvc.perform(post("/todo")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(todoJson));
+
+        result.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.message").value("Todo has already existed!"))
                 .andDo(print());
 
         verify(todoService, times(1)).create(any(Todo.class));
