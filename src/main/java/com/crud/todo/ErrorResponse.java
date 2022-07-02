@@ -9,14 +9,6 @@ public class ErrorResponse {
     public ErrorResponse() {
     }
 
-    public ErrorResponse(Object error) {
-        this.error = error;
-    }
-
-    public Object getError() {
-        return error;
-    }
-
     public void setError(Object error) {
         this.error = error;
     }
