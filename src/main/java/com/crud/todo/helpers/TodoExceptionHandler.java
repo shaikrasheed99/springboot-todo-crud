@@ -1,6 +1,5 @@
-package com.crud.todo.controller;
+package com.crud.todo.helpers;
 
-import com.crud.todo.ErrorResponse;
 import com.crud.todo.exceptions.TodoAlreadyExistException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;

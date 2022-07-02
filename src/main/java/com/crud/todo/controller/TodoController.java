@@ -1,6 +1,6 @@
 package com.crud.todo.controller;
 
-import com.crud.todo.SuccessResponse;
+import com.crud.todo.helpers.SuccessResponse;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.service.TodoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
