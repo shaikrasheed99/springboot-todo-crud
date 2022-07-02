@@ -1,5 +1,6 @@
 package com.crud.todo.controller;
 
+import com.crud.todo.exceptions.EmptyRequestBodyException;
 import com.crud.todo.exceptions.TodoAlreadyExistException;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.service.TodoService;
@@ -71,6 +72,23 @@ public class TodoControllerTest {
 
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error.message").value("Todo has already existed!"))
+                .andDo(print());
+
+        verify(todoService, times(1)).create(any(Todo.class));
+    }
+
+    @Test
+    void shouldBeAbleToReturnEmptyRequestBodyErrorMessageWhenRequestBodyIsEmpty() throws Exception {
+        Todo todo = new Todo();
+        when(todoService.create(any(Todo.class))).thenThrow(new EmptyRequestBodyException("Request body should not be empty!"));
+
+        String todoJson = new ObjectMapper().writeValueAsString(todo);
+        ResultActions result = mockMvc.perform(post("/todo")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(todoJson));
+
+        result.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.message").value("Request body should not be empty!"))
                 .andDo(print());
 
         verify(todoService, times(1)).create(any(Todo.class));
