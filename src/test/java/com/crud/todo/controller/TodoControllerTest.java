@@ -1,9 +1,11 @@
 package com.crud.todo.controller;
 
 import com.crud.todo.exceptions.EmptyRequestBodyException;
+import com.crud.todo.exceptions.InvalidRequestBodyException;
 import com.crud.todo.exceptions.TodoAlreadyExistException;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.service.TodoService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -92,5 +98,27 @@ public class TodoControllerTest {
                 .andDo(print());
 
         verify(todoService, times(1)).create(any(Todo.class));
+    }
+
+    @Test
+    void shouldBeAbleToReturnInvalidRequestBodyResponseWhenFieldsAreMissingInRequestBody() throws Exception {
+        Todo todo = new Todo();
+        todo.setCompleted(false);
+        List<Object> errors = new ArrayList<>();
+        errors.add(Collections.singletonMap("message", "Todo Id should not be empty!"));
+        errors.add(Collections.singletonMap("message", "Todo description should not be empty!"));
+        errors.add(Collections.singletonMap("message", "Todo priority should not be empty!"));
+        when(todoService.create(any(Todo.class))).thenThrow(new InvalidRequestBodyException(errors));
+
+        String todoJson = new ObjectMapper().writeValueAsString(todo);
+        ResultActions result = mockMvc.perform(post("/todo")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(todoJson));
+
+        result.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error[0].message").value("Todo Id should not be empty!"))
+                .andExpect(jsonPath("$.error[1].message").value("Todo description should not be empty!"))
+                .andExpect(jsonPath("$.error[2].message").value("Todo priority should not be empty!"))
+                .andDo(print());
     }
 }

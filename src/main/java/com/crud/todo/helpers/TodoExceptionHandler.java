@@ -1,6 +1,7 @@
 package com.crud.todo.helpers;
 
 import com.crud.todo.exceptions.EmptyRequestBodyException;
+import com.crud.todo.exceptions.InvalidRequestBodyException;
 import com.crud.todo.exceptions.TodoAlreadyExistException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +26,21 @@ public class TodoExceptionHandler {
     }
 
     @ExceptionHandler(value = {
-            EmptyRequestBodyException.class
+            EmptyRequestBodyException.class,
     })
     public ResponseEntity<?> handleEmptyRequestBodyException(EmptyRequestBodyException emptyRequestBodyException) throws JsonProcessingException {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setError(Collections.singletonMap("message", emptyRequestBodyException.getMessage()));
+        String response = errorResponse.convertToJson();
+        return ResponseEntity.status(BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(value = {
+            InvalidRequestBodyException.class,
+    })
+    public ResponseEntity<?> handleInvalidRequestBodyException(InvalidRequestBodyException invalidRequestBodyException) throws JsonProcessingException {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setError(invalidRequestBodyException.getErrors());
         String response = errorResponse.convertToJson();
         return ResponseEntity.status(BAD_REQUEST).body(response);
     }
