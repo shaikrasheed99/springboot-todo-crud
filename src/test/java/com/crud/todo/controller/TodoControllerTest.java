@@ -3,6 +3,7 @@ package com.crud.todo.controller;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.service.TodoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,19 @@ public class TodoControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private Todo todo;
+
+    @BeforeEach
+    public void init() {
+        int id = 1;
+        String description = "Sleeping";
+        boolean completed = false;
+        String priority = "high";
+        todo = new Todo(id, description, completed, priority);
+    }
+
     @Test
     void shouldBeAbleToSaveTodoDetails() throws Exception {
-        Todo todo = new Todo(1, "Sleeping", false, "high");
         when(todoService.create(any(Todo.class))).thenReturn(todo);
 
         String todoJson = new ObjectMapper().writeValueAsString(todo);
