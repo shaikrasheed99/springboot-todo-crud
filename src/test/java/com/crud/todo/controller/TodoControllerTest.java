@@ -185,4 +185,17 @@ public class TodoControllerTest {
 
         verify(todoService, times(1)).update(any(Todo.class), any(Integer.class));
     }
+
+    @Test
+    void shouldBeAbleToDeleteTodoDetailsByTodoId() throws Exception {
+        when(todoService.deleteTodoById(todo.getId())).thenReturn(true);
+
+        ResultActions result = mockMvc.perform(delete("/todo/{id}", 1));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.message").value("Delete successfully!"))
+                .andDo(print());
+
+        verify(todoService, times(1)).deleteTodoById(todo.getId());
+    }
 }

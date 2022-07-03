@@ -50,4 +50,13 @@ public class TodoController {
         String response = successResponse.convertToJson();
         return ResponseEntity.status(OK).body(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTodoById(@PathVariable int id) throws JsonProcessingException {
+        boolean status = todoService.deleteTodoById(id);
+        SuccessResponse successResponse = new SuccessResponse();
+        successResponse.setData(Collections.singletonMap("message", "Delete successfully!"));
+        String response = successResponse.convertToJson();
+        return ResponseEntity.status(OK).body(response);
+    }
 }
