@@ -1,9 +1,6 @@
 package com.crud.todo.controller;
 
-import com.crud.todo.exceptions.EmptyRequestBodyException;
-import com.crud.todo.exceptions.InvalidRequestBodyException;
-import com.crud.todo.exceptions.TodoAlreadyExistException;
-import com.crud.todo.exceptions.TodoNotFoundException;
+import com.crud.todo.exceptions.*;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.service.TodoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -184,6 +181,23 @@ public class TodoControllerTest {
                 .andDo(print());
 
         verify(todoService, times(1)).update(any(Todo.class), any(Integer.class));
+    }
+
+    @Test
+    void shouldBeAbleToReturnTodoIdAreNotSameErrorMessageWhenProvidedTodoIdIsNotSameAsRequestedTodoId() throws Exception {
+        when(todoService.update(any(Todo.class), any(Integer.class))).thenThrow(new UpdateTodoIdsAreNotSameException("Provided Todo Id is not same as Requested Todo Id!"));
+
+        String todoJson = new ObjectMapper().writeValueAsString(todo);
+        ResultActions result = mockMvc.perform(put("/todo/{todoId}", 2)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(todoJson));
+
+        result.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.message").value("Provided Todo Id is not same as Requested Todo Id!"))
+                .andDo(print());
+
+        verify(todoService, times(1)).update(any(Todo.class), any(Integer.class));
+
     }
 
     @Test

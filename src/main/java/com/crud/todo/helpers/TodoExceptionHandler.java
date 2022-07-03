@@ -1,9 +1,6 @@
 package com.crud.todo.helpers;
 
-import com.crud.todo.exceptions.EmptyRequestBodyException;
-import com.crud.todo.exceptions.InvalidRequestBodyException;
-import com.crud.todo.exceptions.TodoAlreadyExistException;
-import com.crud.todo.exceptions.TodoNotFoundException;
+import com.crud.todo.exceptions.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,10 +26,11 @@ public class TodoExceptionHandler {
 
     @ExceptionHandler(value = {
             EmptyRequestBodyException.class,
+            UpdateTodoIdsAreNotSameException.class
     })
-    public ResponseEntity<?> handleEmptyRequestBodyException(EmptyRequestBodyException emptyRequestBodyException) throws JsonProcessingException {
+    public ResponseEntity<?> handleEmptyRequestBodyException(Exception exception) throws JsonProcessingException {
         ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setError(Collections.singletonMap("message", emptyRequestBodyException.getMessage()));
+        errorResponse.setError(Collections.singletonMap("message", exception.getMessage()));
         String response = errorResponse.convertToJson();
         return ResponseEntity.status(BAD_REQUEST).body(response);
     }
