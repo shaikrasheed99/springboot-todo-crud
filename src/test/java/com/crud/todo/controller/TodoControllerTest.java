@@ -169,4 +169,20 @@ public class TodoControllerTest {
 
         verify(todoService, times(1)).update(any(Todo.class), any(Integer.class));
     }
+
+    @Test
+    void shouldBeAbleToReturnTodoNotFoundErrorMessageWhenTodoIdIsNotPresent() throws Exception {
+        when(todoService.update(any(Todo.class), any(Integer.class))).thenThrow(new TodoNotFoundException("Todo is not found!"));
+
+        String todoJson = new ObjectMapper().writeValueAsString(todo);
+        ResultActions result = mockMvc.perform(put("/todo/{todoId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(todoJson));
+
+        result.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.message").value("Todo is not found!"))
+                .andDo(print());
+
+        verify(todoService, times(1)).update(any(Todo.class), any(Integer.class));
+    }
 }
