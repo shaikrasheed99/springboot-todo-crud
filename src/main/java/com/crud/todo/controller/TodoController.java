@@ -41,4 +41,13 @@ public class TodoController {
         String response = successResponse.convertToJson();
         return ResponseEntity.status(OK).body(response);
     }
+
+    @PutMapping("/{todoId}")
+    public ResponseEntity<?> update(@RequestBody Todo todo, @PathVariable int todoId) throws JsonProcessingException {
+        Todo updatedTodo = todoService.update(todo, todoId);
+        SuccessResponse successResponse = new SuccessResponse();
+        successResponse.setData(updatedTodo);
+        String response = successResponse.convertToJson();
+        return ResponseEntity.status(OK).body(response);
+    }
 }

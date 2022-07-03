@@ -23,8 +23,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -150,5 +149,24 @@ public class TodoControllerTest {
                 .andDo(print());
 
         verify(todoService, times(1)).getTodoById(1);
+    }
+
+    @Test
+    void shouldBeAbleToUpdateTodoDetailsByTodoIs() throws Exception {
+        when(todoService.update(any(Todo.class), any(Integer.class))).thenReturn(todo);
+
+        String todoJson = new ObjectMapper().writeValueAsString(todo);
+        ResultActions result = mockMvc.perform(put("/todo/{todoId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(todoJson));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.id").value("1"))
+                .andExpect(jsonPath("$.data.description").value("Sleeping"))
+                .andExpect(jsonPath("$.data.completed").value("false"))
+                .andExpect(jsonPath("$.data.priority").value("high"))
+                .andDo(print());
+
+        verify(todoService, times(1)).update(any(Todo.class), any(Integer.class));
     }
 }
