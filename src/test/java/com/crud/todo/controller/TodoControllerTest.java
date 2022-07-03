@@ -198,4 +198,17 @@ public class TodoControllerTest {
 
         verify(todoService, times(1)).deleteTodoById(todo.getId());
     }
+
+    @Test
+    void shouldBeAbleToReturnTodoNotFoundErrorMessageWhenTodoIdIsNotPresentWhileDeleting() throws Exception {
+        when(todoService.deleteTodoById(todo.getId())).thenThrow(new TodoNotFoundException("Todo is not found!"));
+
+        ResultActions result = mockMvc.perform(delete("/todo/{id}", 1));
+
+        result.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.message").value("Todo is not found!"))
+                .andDo(print());
+
+        verify(todoService, times(1)).deleteTodoById(todo.getId());
+    }
 }
