@@ -1,5 +1,6 @@
 package com.crud.todo.service;
 
+import com.crud.todo.exceptions.EmptyRequestBodyException;
 import com.crud.todo.exceptions.TodoAlreadyExistException;
 import com.crud.todo.exceptions.TodoNotFoundException;
 import com.crud.todo.repository.Todo;
@@ -44,6 +45,13 @@ public class TodoServiceTest {
         Todo createdTodo = todoService.create(todo);
 
         assertEquals(createdTodo.getDescription(), todo.getDescription());
+    }
+
+    @Test
+    void shouldBeAbleToThrowEmptyRequestBodyErrorMessageWhenTodoIsEmpty() {
+        Todo todo = new Todo();
+
+        assertThrows(EmptyRequestBodyException.class, () -> todoService.create(todo));
     }
 
     @Test
