@@ -62,6 +62,22 @@ public class TodoRepositoryTest {
     }
 
     @Test
+    void shouldBeAbleToGetTodosByCompletedStatus() {
+        boolean status = true;
+        List<Todo> todos = new ArrayList<>();
+        todos.add(new Todo(1, "Sleeping", true, "high"));
+        todos.add(new Todo(2, "Coding", true, "high"));
+        todos.add(new Todo(3, "Reading", false, "low"));
+        todos.add(new Todo(4, "Playing", true, "high"));
+        todos.add(new Todo(5, "Talking", false, "low"));
+        todoRepository.saveAll(todos);
+
+        List<Todo> todoWithCompletedStatus = todoRepository.findAllByCompletedStatus(status);
+
+        assertEquals(3, todoWithCompletedStatus.size());
+    }
+
+    @Test
     void shouldBeAbleToUpdateTodoDetails() {
         Todo addedTodo = todoRepository.save(todo);
 

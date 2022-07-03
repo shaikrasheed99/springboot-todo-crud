@@ -8,5 +8,8 @@ import java.util.List;
 public interface TodoRepository extends CrudRepository<Todo, Integer> {
 
     @Query(value = "SELECT * FROM todos where priority =:priority", nativeQuery = true)
-    public List<Todo> findAllByPriority(String priority);
+    List<Todo> findAllByPriority(String priority);
+
+    @Query(value = "SELECT * FROM todos where completed =:completedStatus", nativeQuery = true)
+    List<Todo> findAllByCompletedStatus(boolean completedStatus);
 }
