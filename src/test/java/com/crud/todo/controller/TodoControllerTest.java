@@ -3,6 +3,7 @@ package com.crud.todo.controller;
 import com.crud.todo.exceptions.EmptyRequestBodyException;
 import com.crud.todo.exceptions.InvalidRequestBodyException;
 import com.crud.todo.exceptions.TodoAlreadyExistException;
+import com.crud.todo.exceptions.TodoNotFoundException;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.service.TodoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -133,6 +134,19 @@ public class TodoControllerTest {
                 .andExpect(jsonPath("$.data.description").value("Sleeping"))
                 .andExpect(jsonPath("$.data.completed").value("false"))
                 .andExpect(jsonPath("$.data.priority").value("high"))
+                .andDo(print());
+
+        verify(todoService, times(1)).getTodoById(1);
+    }
+
+    @Test
+    void shouldBeAbleToReturnTodoNotFoundErrorMessageWhenTodoIsNotPresentWithId() throws Exception {
+        when(todoService.getTodoById(1)).thenThrow(new TodoNotFoundException("Todo is not found!"));
+
+        ResultActions result = mockMvc.perform(get("/todo/{id}", 1));
+
+        result.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.message").value("Todo is not found!"))
                 .andDo(print());
 
         verify(todoService, times(1)).getTodoById(1);
