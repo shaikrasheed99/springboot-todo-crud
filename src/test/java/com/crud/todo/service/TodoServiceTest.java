@@ -1,9 +1,6 @@
 package com.crud.todo.service;
 
-import com.crud.todo.exceptions.EmptyRequestBodyException;
-import com.crud.todo.exceptions.InvalidRequestBodyException;
-import com.crud.todo.exceptions.TodoAlreadyExistException;
-import com.crud.todo.exceptions.TodoNotFoundException;
+import com.crud.todo.exceptions.*;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.repository.TodoRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -102,6 +99,14 @@ public class TodoServiceTest {
         when(todoRepository.findById(todo.getId())).thenReturn(Optional.empty());
 
         assertThrows(TodoNotFoundException.class, () -> todoService.update(todo, todo.getId()));
+    }
+
+    @Test
+    void shouldNotBeAbleToUpdateTodoWhenTodoIdOfRequestBodyIsNotEqualsToProvidedTodoId() {
+        when(todoRepository.findById(todo.getId())).thenReturn(Optional.ofNullable(todo));
+        todo.setId(2);
+
+        assertThrows(UpdateTodoIdsAreNotSameException.class, () -> todoService.update(todo, 1));
     }
 
     @Test

@@ -1,9 +1,6 @@
 package com.crud.todo.service;
 
-import com.crud.todo.exceptions.EmptyRequestBodyException;
-import com.crud.todo.exceptions.InvalidRequestBodyException;
-import com.crud.todo.exceptions.TodoAlreadyExistException;
-import com.crud.todo.exceptions.TodoNotFoundException;
+import com.crud.todo.exceptions.*;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +42,8 @@ public class TodoService {
 
     public Todo update(Todo todo, int todoId) {
         isAvailable(todoId);
+        if (todoId != todo.getId())
+            throw new UpdateTodoIdsAreNotSameException("Provided Todo Id and Request Body Todo Id are not same!");
         return todoRepository.save(todo);
     }
 
