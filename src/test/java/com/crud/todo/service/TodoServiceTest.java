@@ -1,6 +1,7 @@
 package com.crud.todo.service;
 
 import com.crud.todo.exceptions.EmptyRequestBodyException;
+import com.crud.todo.exceptions.InvalidRequestBodyException;
 import com.crud.todo.exceptions.TodoAlreadyExistException;
 import com.crud.todo.exceptions.TodoNotFoundException;
 import com.crud.todo.repository.Todo;
@@ -52,6 +53,14 @@ public class TodoServiceTest {
         Todo todo = new Todo();
 
         assertThrows(EmptyRequestBodyException.class, () -> todoService.create(todo));
+    }
+
+    @Test
+    void shouldBeAbleToThrowInvalidRequestBodyErrorMessageWhenFieldsAreEmpty() {
+        Todo todo = new Todo();
+        todo.setDescription("Sleeping");
+
+        assertThrows(InvalidRequestBodyException.class, () -> todoService.create(todo));
     }
 
     @Test
