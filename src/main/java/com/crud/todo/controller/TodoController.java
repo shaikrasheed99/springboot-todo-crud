@@ -6,14 +6,12 @@ import com.crud.todo.service.TodoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/todo")
@@ -33,5 +31,14 @@ public class TodoController {
         successResponse.setData(Collections.singletonMap("id", createdTodo.getId()));
         String response = successResponse.convertToJson();
         return ResponseEntity.status(CREATED).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getTodoById(@PathVariable int id) throws JsonProcessingException {
+        Todo todo = todoService.getTodoById(id);
+        SuccessResponse successResponse = new SuccessResponse();
+        successResponse.setData(todo);
+        String response = successResponse.convertToJson();
+        return ResponseEntity.status(OK).body(response);
     }
 }

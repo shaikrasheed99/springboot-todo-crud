@@ -5,7 +5,6 @@ import com.crud.todo.exceptions.InvalidRequestBodyException;
 import com.crud.todo.exceptions.TodoAlreadyExistException;
 import com.crud.todo.repository.Todo;
 import com.crud.todo.service.TodoService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +22,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -120,5 +120,21 @@ public class TodoControllerTest {
                 .andExpect(jsonPath("$.error[1].message").value("Todo description should not be empty!"))
                 .andExpect(jsonPath("$.error[2].message").value("Todo priority should not be empty!"))
                 .andDo(print());
+    }
+
+    @Test
+    void shouldBeAbleToGetTodoDetailsByTodoId() throws Exception {
+        when(todoService.getTodoById(1)).thenReturn(todo);
+
+        ResultActions result = mockMvc.perform(get("/todo/{id}", 1));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.id").value("1"))
+                .andExpect(jsonPath("$.data.description").value("Sleeping"))
+                .andExpect(jsonPath("$.data.completed").value("false"))
+                .andExpect(jsonPath("$.data.priority").value("high"))
+                .andDo(print());
+
+        verify(todoService, times(1)).getTodoById(1);
     }
 }
