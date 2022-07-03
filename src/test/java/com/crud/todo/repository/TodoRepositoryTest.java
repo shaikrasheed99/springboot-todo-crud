@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -40,6 +43,22 @@ public class TodoRepositoryTest {
         Todo todo = todoRepository.findById(1).get();
 
         assertEquals(todo.getDescription(), "Sleeping");
+    }
+
+    @Test
+    void shouldBeAbleToGetTodosByPriority() {
+        String priority = "high";
+        List<Todo> todos = new ArrayList<>();
+        todos.add(new Todo(1, "Sleeping", false, "high"));
+        todos.add(new Todo(2, "Coding", false, "high"));
+        todos.add(new Todo(3, "Reading", false, "low"));
+        todos.add(new Todo(4, "Playing", false, "high"));
+        todos.add(new Todo(5, "Talking", false, "low"));
+        todoRepository.saveAll(todos);
+
+        List<Todo> todoWithHighPriority = todoRepository.findAllByPriority(priority);
+
+        assertEquals(3, todoWithHighPriority.size());
     }
 
     @Test
