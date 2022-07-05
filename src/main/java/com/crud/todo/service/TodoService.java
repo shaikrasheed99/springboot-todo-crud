@@ -59,6 +59,10 @@ public class TodoService {
         return todos;
     }
 
+    public List<Todo> getTodosByCompletedStatus(boolean completedStatus) {
+        return todoRepository.findAllByCompletedStatus(completedStatus);
+    }
+
     private Todo isAvailable(int todoId) {
         Optional<Todo> todo = todoRepository.findById(todoId);
         if (todo.isEmpty()) throw new TodoNotFoundException("Todo is not found!");

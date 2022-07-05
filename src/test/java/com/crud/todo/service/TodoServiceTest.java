@@ -107,6 +107,19 @@ public class TodoServiceTest {
     }
 
     @Test
+    void shouldBeAbleToGetTodosByCompletedStatus() {
+        boolean completedStatus = true;
+        List<Todo> todosWithCompletedStatus = new ArrayList<>();
+        todosWithCompletedStatus.add(new Todo(1, "Sleeping", true, "high"));
+        todosWithCompletedStatus.add(new Todo(2, "Coding", true, "high"));
+        when(todoRepository.findAllByCompletedStatus(completedStatus)).thenReturn(todosWithCompletedStatus);
+
+        List<Todo> newTodosByCompletedStatus = todoService.getTodosByCompletedStatus(completedStatus);
+
+        assertEquals(newTodosByCompletedStatus.size(), todosWithCompletedStatus.size());
+    }
+
+    @Test
     void shouldBeAbleToUpdateTodoDetailsByTodoId() {
         Todo yetToUpdateTodo = new Todo(todo.getId(), todo.getDescription(), todo.getCompleted(), "low");
         when(todoRepository.findById(todo.getId())).thenReturn(Optional.ofNullable(todo));
