@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -81,6 +83,19 @@ public class TodoServiceTest {
         when(todoRepository.findById(todo.getId())).thenReturn(Optional.empty());
 
         assertThrows(TodoNotFoundException.class, () -> todoService.getTodoById(todo.getId()));
+    }
+
+    @Test
+    void shouldBeAbleToGetTodosByPriority() {
+        String priority = "high";
+        List<Todo> todosWithHighPriority = new ArrayList<>();
+        todosWithHighPriority.add(new Todo(1, "Sleeping", false, "high"));
+        todosWithHighPriority.add(new Todo(2, "Coding", false, "high"));
+        when(todoRepository.findAllByPriority(priority)).thenReturn(todosWithHighPriority);
+
+        List<Todo> newTodosByPriority = todoService.getTodosByPriority(priority);
+
+        assertEquals(newTodosByPriority.size(), todosWithHighPriority.size());
     }
 
     @Test

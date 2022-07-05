@@ -53,6 +53,10 @@ public class TodoService {
         return true;
     }
 
+    public List<Todo> getTodosByPriority(String priority) {
+        return todoRepository.findAllByPriority(priority);
+    }
+
     private Todo isAvailable(int todoId) {
         Optional<Todo> todo = todoRepository.findById(todoId);
         if (todo.isEmpty()) throw new TodoNotFoundException("Todo is not found!");
