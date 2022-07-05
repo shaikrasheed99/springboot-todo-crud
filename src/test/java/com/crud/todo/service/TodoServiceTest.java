@@ -99,6 +99,14 @@ public class TodoServiceTest {
     }
 
     @Test
+    void shouldBeAbleToThrowExceptionWhenTodosAreNotFoundByPriority() {
+        String priority = "high";
+        when(todoRepository.findAllByPriority(priority)).thenReturn(List.of());
+
+        assertThrows(TodoNotFoundException.class, () -> todoService.getTodosByPriority(priority));
+    }
+
+    @Test
     void shouldBeAbleToUpdateTodoDetailsByTodoId() {
         Todo yetToUpdateTodo = new Todo(todo.getId(), todo.getDescription(), todo.getCompleted(), "low");
         when(todoRepository.findById(todo.getId())).thenReturn(Optional.ofNullable(todo));
