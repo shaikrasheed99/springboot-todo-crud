@@ -120,6 +120,14 @@ public class TodoServiceTest {
     }
 
     @Test
+    void shouldBeAbleToThrowExceptionWhenTodosAreNotFoundByCompletedStatus() {
+        boolean completedStatus = true;
+        when(todoRepository.findAllByCompletedStatus(completedStatus)).thenReturn(List.of());
+
+        assertThrows(TodoNotFoundException.class, () -> todoService.getTodosByCompletedStatus(completedStatus));
+    }
+
+    @Test
     void shouldBeAbleToUpdateTodoDetailsByTodoId() {
         Todo yetToUpdateTodo = new Todo(todo.getId(), todo.getDescription(), todo.getCompleted(), "low");
         when(todoRepository.findById(todo.getId())).thenReturn(Optional.ofNullable(todo));

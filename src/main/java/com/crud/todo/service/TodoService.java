@@ -60,7 +60,9 @@ public class TodoService {
     }
 
     public List<Todo> getTodosByCompletedStatus(boolean completedStatus) {
-        return todoRepository.findAllByCompletedStatus(completedStatus);
+        List<Todo> todos = todoRepository.findAllByCompletedStatus(completedStatus);
+        if (todos.isEmpty()) throw new TodoNotFoundException("Todos are not found with this completed status!");
+        return todos;
     }
 
     private Todo isAvailable(int todoId) {
