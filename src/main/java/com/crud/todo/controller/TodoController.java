@@ -69,4 +69,13 @@ public class TodoController {
         String response = successResponse.convertToJson();
         return ResponseEntity.status(OK).body(response);
     }
+
+    @GetMapping("/completed/{status}")
+    public ResponseEntity<?> getTodosByCompletedStatus(@PathVariable boolean status) throws JsonProcessingException {
+        List<Todo> todos = todoService.getTodosByCompletedStatus(status);
+        SuccessResponse successResponse = new SuccessResponse();
+        successResponse.setData(todos);
+        String response = successResponse.convertToJson();
+        return ResponseEntity.status(OK).body(response);
+    }
 }
