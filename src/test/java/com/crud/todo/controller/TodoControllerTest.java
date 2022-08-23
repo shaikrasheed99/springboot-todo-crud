@@ -149,6 +149,35 @@ public class TodoControllerTest {
     }
 
     @Test
+    void shouldBeAbleToGetTodosByPriority() throws Exception {
+        when(todoService.getTodosByPriority("high")).thenReturn(Collections.singletonList(todo));
+
+        ResultActions result = mockMvc.perform(get("/todo/priority/{priority}", "high"));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].id").value("1"))
+                .andExpect(jsonPath("$.data[0].description").value("Sleeping"))
+                .andExpect(jsonPath("$.data[0].completed").value("false"))
+                .andExpect(jsonPath("$.data[0].priority").value("high"))
+                .andDo(print());
+
+        verify(todoService, times(1)).getTodosByPriority("high");
+    }
+
+    @Test
+    void shouldBeAbleToReturnTodoNotFoundErrorMessageWhenTodosAreNotPresentWithPriority() throws Exception {
+        when(todoService.getTodosByPriority("high")).thenThrow(new TodoNotFoundException("Todos are not found!"));
+
+        ResultActions result = mockMvc.perform(get("/todo/priority/{priority}", "high"));
+
+        result.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.message").value("Todos are not found!"))
+                .andDo(print());
+
+        verify(todoService, times(1)).getTodosByPriority("high");
+    }
+
+    @Test
     void shouldBeAbleToUpdateTodoDetailsByTodoIs() throws Exception {
         when(todoService.update(any(Todo.class), any(Integer.class))).thenReturn(todo);
 

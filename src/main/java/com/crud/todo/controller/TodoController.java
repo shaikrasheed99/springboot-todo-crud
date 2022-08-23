@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -56,6 +57,15 @@ public class TodoController {
         boolean status = todoService.deleteTodoById(id);
         SuccessResponse successResponse = new SuccessResponse();
         successResponse.setData(Collections.singletonMap("message", "Delete successfully!"));
+        String response = successResponse.convertToJson();
+        return ResponseEntity.status(OK).body(response);
+    }
+
+    @GetMapping("/priority/{priority}")
+    public ResponseEntity<?> getTodosByPriority(@PathVariable String priority) throws JsonProcessingException {
+        List<Todo> todos = todoService.getTodosByPriority(priority);
+        SuccessResponse successResponse = new SuccessResponse();
+        successResponse.setData(todos);
         String response = successResponse.convertToJson();
         return ResponseEntity.status(OK).body(response);
     }
