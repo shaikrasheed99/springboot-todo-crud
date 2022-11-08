@@ -15,7 +15,7 @@
 ### Create a Todo
 
 * Request
-```json
+```
 POST /todo
 Host: localhost:3000
 Content-Type: application/json
@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 ```
 * Response
-```json
+```
 {
     "data": {
         "id": 1
@@ -38,12 +38,12 @@ Content-Type: application/json
 ### Get Todo details by Todo id
 
 * Request
-```json
+```
 GET /todo/{1}
 Host: localhost:3000
 ```
 * Response
-```json
+```
 {
     "data": {
         "id": 1,
@@ -57,7 +57,7 @@ Host: localhost:3000
 ### Update Todo details
 
 * Request
-```json
+```
 PUT /todo/{1}
 Host: localhost:3000
 Content-Type: application/json
@@ -69,7 +69,7 @@ Content-Type: application/json
 }
 ```
 * Response
-```json
+```
 {
     "data": {
         "id": 1,
@@ -83,12 +83,12 @@ Content-Type: application/json
 ### Delete a Todo by Todo id
 
 * Request
-```json
+```
 DELETE /todo/{1} 
 Host: localhost:3000
 ```
 * Response
-```json
+```
 {
     "data": {
         "message": "Delete successfully!"
@@ -99,12 +99,12 @@ Host: localhost:3000
 ### Get Todos by Priority
 
 * Request
-```json
+```
 GET /todo/priority/{“high”} 
 Host: localhost:3000
 ```
 * Response
-```json
+```
 {
     "data": [
         {
@@ -120,12 +120,12 @@ Host: localhost:3000
 ### Get Todos by Completed Status
 
 * Request
-```json
+```
 GET /todo/completed/{false} 
 Host: localhost:3000
 ```
 * Response
-```json
+```
 {
     "data": [
         {
